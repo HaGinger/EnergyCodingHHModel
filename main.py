@@ -10,13 +10,10 @@ if __name__ == "__main__":
     n_stimulate = int(0.1 * N)
 
     w = np.random.uniform(0, .7, (N, N))
-    # w[0:2, :] = 0
-    # w[0:2, 0:2] = 0
-    # w[:, 2:] = 0
     tau = np.random.uniform(time_delay[0], time_delay[1], (N, N))
+    
     i_ext = np.zeros((N, 1))
     i_ext[0:n_stimulate] = i_0
-
     I_ext = np.tile(i_ext, (1, int(i_t / dt) + 1))
 
     V_m, i_l, i_Na, i_K, spike_count = hhmodel.network(t, w, tau, I_ext)
@@ -43,7 +40,3 @@ if __name__ == "__main__":
     fig2.set_ylabel('power')
     plt.show()
 
-    # fig, [ax1, ax2] = plt.subplots(2, 1, sharex=True)
-    # ax1.plot(timeline, V_m[0, :])
-    # ax2.plot(timeline, V_m[2, :])
-    # plt.show()
