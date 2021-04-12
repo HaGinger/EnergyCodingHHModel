@@ -2,10 +2,6 @@ from config import dt, C_m, g_l, g_Na, g_K, E_l, E_Na, E_K, V_r, V_threshold, N,
 import numpy as np
 
 
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
-
-
 def alpha_n(v_0):
     return 0.01 * (10 - v_0) / (np.exp((10 - v_0) / 10) - 1)
 
@@ -83,21 +79,14 @@ def network(t, weight, tau, I_ext=None):
             Q = np.float64(~np.signbit(V_m[idx_row, idx] - V_threshold))
         for j in range(N):
             I_in[j] = np.dot(weight[j, :], Q[j, :])
-        # I_in = np.diag(np.dot(weight, np.transpose(Q)))
 
         Q_1 = np.float64(~np.signbit(V_m[np.arange(N), i] - V_threshold))
         dQ = Q_1 * (Q_1 - Q_0)
-        # tau[np.where(dQ == 1)] = np.random.uniform(time_delay[0], time_delay[1], (int(np.sum(dQ)), ))
         spike_count[:, i] = dQ
-
         Q_0 = Q_1
 
-        # I_in = I_in / N - 1e-5
-        # I_in = I_in / (1 - I_in)
-        # I_in = (sigmoid(I_in) - .5) * 50
         I_all = 450 * I_in / N + I_ext[:, i]
-        # if i % 800 == 0:
-        #     print('time ', int(i / 40))
+
         V_m[:, i + 1], n, m, h, i_l[:, i], i_Na[:, i], i_K[:, i] = membrane_potential(V_m[:, i], n, m, h, I_all)
 
     i_l[:, -1] = -g_l * (E_l - V_m[:, -1])
