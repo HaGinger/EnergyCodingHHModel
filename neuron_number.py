@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
-    t = 200
+    time_span = 200
     i_t = 200
     test_num0 = 20
     test_num1 = 500
@@ -34,7 +34,7 @@ if __name__ == "__main__":
         for j in range(n_rep):
             tau = np.random.uniform(td[0], td[1], (N,))
             w = np.random.uniform(0, weight, (N, N))
-            V_m, i_l, i_Na, i_K, spike_count = hhmodel.network(N, t, w, tau, I_ext)
+            V_m, i_l, i_Na, i_K, spike_count = hhmodel.network(N, time_span, w, tau, I_ext)
             tmp_ner += NER(i_l[n_stimulate:, :], i_Na[n_stimulate:, :], i_K[n_stimulate:, :])
             tmp_beta += mNER(V_m[n_stimulate:, :])
             tmp_mcc += MCC(V_m[n_stimulate:, :])

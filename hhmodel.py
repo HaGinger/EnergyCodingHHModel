@@ -48,8 +48,8 @@ def membrane_potential(V_m, n, m, h, I):
     return V_1, n_1, m_1, h_1, i_l, i_Na, i_K
 
 
-def network(N, t, weight, tau, I_ext=None):
-    tn = int(t / dt)
+def network(N, time_span, weight, tau, I_ext=None):
+    tn = int(time_span / dt)
     type = len(tau.shape)
 
     I_tmp = np.zeros((N, tn + 1))

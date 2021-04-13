@@ -4,9 +4,9 @@ from config import N, dt, i_0, E_K, E_Na, E_l, td, weight
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    t = 450
+    time_span = 450
     i_t = 450
-    timeline = np.linspace(0, t, int(t / dt) + 1)
+    timeline = np.linspace(0, time_span, int(time_span / dt) + 1)
     n_stimulate = int(0.1 * N)
 
     w = np.random.uniform(0, weight, (N, N))
@@ -15,7 +15,7 @@ if __name__ == "__main__":
     i_ext[0:n_stimulate] = i_0
     I_ext = np.tile(i_ext, (1, int(i_t / dt) + 1))
 
-    V_m, i_l, i_Na, i_K, spike_count = hhmodel.network(t, w, tau, I_ext)
+    V_m, i_l, i_Na, i_K, spike_count = hhmodel.network(time_span, w, tau, I_ext)
 
     Power = (i_l * abs(E_l) - abs(i_Na) * abs(E_Na) + i_K * abs(E_K)) * 0.001
     Power = np.sum(Power, 0)
