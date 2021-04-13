@@ -1,6 +1,6 @@
 import hhmodel
 import numpy as np
-from config import N, dt, i_0, E_K, E_Na, E_l, time_delay
+from config import N, dt, i_0, E_K, E_Na, E_l, td, weight
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
@@ -9,9 +9,8 @@ if __name__ == "__main__":
     timeline = np.linspace(0, t, int(t / dt) + 1)
     n_stimulate = int(0.1 * N)
 
-    w = np.random.uniform(0, .7, (N, N))
-    tau = np.random.uniform(time_delay[0], time_delay[1], (N, N))
-    
+    w = np.random.uniform(0, weight, (N, N))
+    tau = np.random.uniform(td[0], td[1], (N, N))
     i_ext = np.zeros((N, 1))
     i_ext[0:n_stimulate] = i_0
     I_ext = np.tile(i_ext, (1, int(i_t / dt) + 1))
@@ -39,4 +38,3 @@ if __name__ == "__main__":
     fig2.set_title('power')
     fig2.set_ylabel('power')
     plt.show()
-

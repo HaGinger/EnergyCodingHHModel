@@ -1,5 +1,9 @@
-from config import dt, C_m, g_l, g_Na, g_K, E_l, E_Na, E_K, V_r, V_threshold, N, i_0, time_delay
+from config import dt, C_m, g_l, g_Na, g_K, E_l, E_Na, E_K, V_r, V_threshold
 import numpy as np
+
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
 
 
 def alpha_n(v_0):
@@ -44,8 +48,9 @@ def membrane_potential(V_m, n, m, h, I):
     return V_1, n_1, m_1, h_1, i_l, i_Na, i_K
 
 
-def network(t, weight, tau, I_ext=None):
+def network(N, t, weight, tau, I_ext=None):
     tn = int(t / dt)
+    type = len(tau.shape)
 
     I_tmp = np.zeros((N, tn + 1))
     if I_ext.any():
@@ -67,7 +72,11 @@ def network(t, weight, tau, I_ext=None):
     tau_int = np.int32(tau / dt)
     tau_max = np.max(tau_int)
     I_in = np.zeros(N, )
-    idx_row = np.tile(np.arange(N), (N, 1))
+    if type == 2:
+        idx_row = np.tile(np.arange(N), (N, 1))
+    else:
+        idx_row = np.arange(N)
+
     for i in range(tn):
         idx = i - tau_int
         if i <= tau_max:
@@ -77,8 +86,11 @@ def network(t, weight, tau, I_ext=None):
             Q[idx1] = 0
         else:
             Q = np.float64(~np.signbit(V_m[idx_row, idx] - V_threshold))
-        for j in range(N):
-            I_in[j] = np.dot(weight[j, :], Q[j, :])
+        if type == 2:
+            for j in range(N):
+                I_in[j] = np.dot(weight[j, :], Q[j, :])
+        else:
+            I_in = np.dot(weight, Q)
 
         Q_1 = np.float64(~np.signbit(V_m[np.arange(N), i] - V_threshold))
         dQ = Q_1 * (Q_1 - Q_0)
